@@ -1,0 +1,36 @@
+import React from 'react';
+import { Home, BarChart3, Settings } from 'lucide-react';
+import { Link } from './Link';
+
+export const Navigation: React.FC = () => {
+  const currentPath = window.location.hash.slice(1) || '/';
+
+  const navItems = [
+    { path: '/', icon: Home, label: 'Home' },
+    { path: '/stats', icon: BarChart3, label: 'Stats' },
+    { path: '/settings', icon: Settings, label: 'Settings' }
+  ];
+
+  return (
+    <nav className="fixed bottom-0 left-0 right-0 bg-card border-t border-border py-3 px-4 z-50">
+      <div className="max-w-2xl mx-auto flex justify-around items-center">
+        {navItems.map(item => {
+          const Icon = item.icon;
+          const isActive = currentPath === item.path;
+          return (
+            <Link
+              key={item.path}
+              to={item.path}
+              className={`flex flex-col items-center gap-1 no-underline transition-colors ${
+                isActive ? 'text-primary' : 'text-muted-foreground'
+              }`}
+            >
+              <Icon size={20} />
+              <span className="text-xs">{item.label}</span>
+            </Link>
+          );
+        })}
+      </div>
+    </nav>
+  );
+};
