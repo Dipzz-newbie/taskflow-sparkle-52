@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useApp } from "@/context/AppContext";
 import TaskInput from "@/components/TaskInput";
 import TaskItem from "@/components/TaskItem";
@@ -6,7 +6,14 @@ import { Task } from "@/types";
 import { CheckCircle2 } from "lucide-react";
 
 const Home: React.FC = () => {
-  const { tasks, setTasks } = useApp();
+  const { tasks, setTasks, user } = useApp();
+
+  useEffect(() => {
+    // Redirect to auth if not logged in
+    if (!user) {
+      window.location.hash = '/auth';
+    }
+  }, [user]);
 
   const addTask = (text: string) => {
     const newTask: Task = {

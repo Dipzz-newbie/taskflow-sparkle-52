@@ -1,11 +1,18 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useApp } from "@/context/AppContext";
-import { Settings as SettingsIcon, Moon, Sun, Trash2 } from "lucide-react";
+import { Settings as SettingsIcon, Moon, Sun, Trash2, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
 const Settings: React.FC = () => {
-  const { darkMode, setDarkMode, setTasks } = useApp();
+  const { darkMode, setDarkMode, setTasks, user, signOut } = useApp();
+
+  useEffect(() => {
+    // Redirect to auth if not logged in
+    if (!user) {
+      window.location.hash = '/auth';
+    }
+  }, [user]);
 
   const handleClearAll = () => {
     if (window.confirm("Are you sure you want to delete all tasks? This action cannot be undone.")) {
@@ -74,8 +81,28 @@ const Settings: React.FC = () => {
             </Button>
           </div>
 
+          {/* Account Section */}
+          <div className="mt-6 p-4 bg-task-bg rounded-lg border border-task-border">
+            <h3 className="font-semibold text-foreground mb-3">Account</h3>
+            <div className="space-y-4">
+              <div>
+                <p className="text-sm text-muted-foreground">Signed in as</p>
+                <p className="text-sm font-medium text-foreground">{user?.email}</p>
+              </div>
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={signOut}
+                className="w-full"
+              >
+                <LogOut size={16} className="mr-2" />
+                Sign Out
+              </Button>
+            </div>
+          </div>
+
           {/* App Info */}
-          <div className="mt-8 p-4 bg-task-bg rounded-lg border border-task-border">
+          <div className="mt-4 p-4 bg-task-bg rounded-lg border border-task-border">
             <h3 className="font-semibold text-foreground mb-2">About</h3>
             <p className="text-sm text-muted-foreground">
               Task Manager App v1.0

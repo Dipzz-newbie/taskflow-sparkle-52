@@ -1,9 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useApp } from "@/context/AppContext";
 import { BarChart3, CheckCircle2, Circle, TrendingUp } from "lucide-react";
 
 const Stats: React.FC = () => {
-  const { tasks } = useApp();
+  const { tasks, user } = useApp();
+
+  useEffect(() => {
+    // Redirect to auth if not logged in
+    if (!user) {
+      window.location.hash = '/auth';
+    }
+  }, [user]);
 
   const completedCount = tasks.filter((t) => t.completed).length;
   const activeCount = tasks.length - completedCount;

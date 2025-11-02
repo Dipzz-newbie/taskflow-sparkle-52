@@ -1,15 +1,47 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
 import { AppContextType, Task, ThemeColors } from "@/types";
+import { supabase } from "@/integrations/supabase/client";
+import { User, Session } from "@supabase/supabase-js";
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const [tasks, setTasks] = useState<Task[]>(() => {
+    const saved = localStorage.getItem("tasks");
+    return saved ? JSON.parse(saved) : [];
+  });
   const [darkMode, setDarkMode] = useState(() => {
     const saved = localStorage.getItem("darkMode");
     return saved ? JSON.parse(saved) : false;
   });
+  const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
 
+  // Authentication effect
+  useEffect(() => {
+    // Set up auth state listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setSession(session);
+        setUser(session?.user ?? null);
+      }
+    );
+
+    // Check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  // Save tasks to localStorage
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
+
+  // Dark mode effect
   useEffect(() => {
     localStorage.setItem("darkMode", JSON.stringify(darkMode));
     if (darkMode) {
@@ -20,17 +52,22 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   }, [darkMode]);
 
   const theme: ThemeColors = {
-    bg: darkMode ? "hsl(var(--background))" : "hsl(var(--background))",
-    surface: darkMode ? "hsl(var(--card))" : "hsl(var(--card))",
-    surfaceHover: darkMode ? "hsl(var(--task-hover))" : "hsl(var(--task-hover))",
-    border: darkMode ? "hsl(var(--border))" : "hsl(var(--border))",
-    text: darkMode ? "hsl(var(--foreground))" : "hsl(var(--foreground))",
-    textSecondary: darkMode ? "hsl(var(--muted-foreground))" : "hsl(var(--muted-foreground))",
-    accent: darkMode ? "hsl(var(--primary))" : "hsl(var(--primary))",
+    bg: "hsl(var(--background))",
+    surface: "hsl(var(--card))",
+    surfaceHover: "hsl(var(--task-hover))",
+    border: "hsl(var(--border))",
+    text: "hsl(var(--foreground))",
+    textSecondary: "hsl(var(--muted-foreground))",
+    accent: "hsl(var(--primary))",
+  };
+
+  const signOut = async () => {
+    await supabase.auth.signOut();
+    window.location.hash = '/auth';
   };
 
   return (
-    <AppContext.Provider value={{ tasks, setTasks, darkMode, setDarkMode, theme }}>
+    <AppContext.Provider value={{ tasks, setTasks, darkMode, setDarkMode, theme, user, session, signOut }}>
       {children}
     </AppContext.Provider>
   );

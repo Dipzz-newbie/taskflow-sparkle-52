@@ -22,4 +22,7 @@ export interface AppContextType {
   darkMode: boolean;
   setDarkMode: React.Dispatch<React.SetStateAction<boolean>>;
   theme: ThemeColors;
+  user: any;
+  session: any;
+  signOut: () => Promise<void>;
 }
