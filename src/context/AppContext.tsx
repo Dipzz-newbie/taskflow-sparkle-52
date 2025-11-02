@@ -63,7 +63,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
   const signOut = async () => {
     await supabase.auth.signOut();
-    window.location.hash = '/auth';
+    window.location.hash = '/login';
   };
 
   return (

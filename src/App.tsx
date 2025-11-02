@@ -8,7 +8,8 @@ import { Navigation } from "@/components/Navigation";
 import Home from "./pages/Home";
 import Stats from "./pages/Stats";
 import Settings from "./pages/Settings";
-import Auth from "./pages/Auth";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 const queryClient = new QueryClient();
 
@@ -22,7 +23,8 @@ const App = () => (
           <Route path="/" component={Home} />
           <Route path="/stats" component={Stats} />
           <Route path="/settings" component={Settings} />
-          <Route path="/auth" component={Auth} />
+          <Route path="/login" component={Login} />
+          <Route path="/register" component={Register} />
         </Router>
         <Navigation />
       </AppProvider>

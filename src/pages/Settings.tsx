@@ -8,9 +8,9 @@ const Settings: React.FC = () => {
   const { darkMode, setDarkMode, setTasks, user, signOut } = useApp();
 
   useEffect(() => {
-    // Redirect to auth if not logged in
+    // Redirect to login if not logged in
     if (!user) {
-      window.location.hash = '/auth';
+      window.location.hash = '/login';
     }
   }, [user]);
 

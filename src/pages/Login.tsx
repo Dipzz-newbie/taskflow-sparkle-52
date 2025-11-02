@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { useApp } from '@/context/AppContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { LogIn, UserPlus } from 'lucide-react';
+import { LogIn } from 'lucide-react';
+import { Link } from '@/components/Link';
 
-const Auth: React.FC = () => {
-  const [isLogin, setIsLogin] = useState(true);
+const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -23,7 +22,7 @@ const Auth: React.FC = () => {
     });
   }, []);
 
-  const handleAuth = async (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!email || !password) {
@@ -38,38 +37,19 @@ const Auth: React.FC = () => {
     setLoading(true);
 
     try {
-      if (isLogin) {
-        const { error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-        if (error) throw error;
+      if (error) throw error;
 
-        toast({
-          title: "Success",
-          description: "Logged in successfully!",
-        });
-        
-        window.location.hash = '/';
-      } else {
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            emailRedirectTo: `${window.location.origin}/`,
-          },
-        });
-
-        if (error) throw error;
-
-        toast({
-          title: "Success",
-          description: "Account created successfully!",
-        });
-        
-        window.location.hash = '/';
-      }
+      toast({
+        title: "Success",
+        description: "Logged in successfully!",
+      });
+      
+      window.location.hash = '/';
     } catch (error: any) {
       toast({
         title: "Error",
@@ -89,24 +69,18 @@ const Auth: React.FC = () => {
           {/* Header */}
           <div className="text-center space-y-2">
             <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-2">
-              {isLogin ? (
-                <LogIn className="w-8 h-8 text-primary" />
-              ) : (
-                <UserPlus className="w-8 h-8 text-primary" />
-              )}
+              <LogIn className="w-8 h-8 text-primary" />
             </div>
             <h1 className="text-3xl font-bold text-foreground">
-              {isLogin ? 'Welcome Back' : 'Create Account'}
+              Welcome Back
             </h1>
             <p className="text-muted-foreground">
-              {isLogin
-                ? 'Sign in to your account to continue'
-                : 'Sign up to get started with your tasks'}
+              Sign in to your account to continue
             </p>
           </div>
 
           {/* Form */}
-          <form onSubmit={handleAuth} className="space-y-4">
+          <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -141,46 +115,26 @@ const Auth: React.FC = () => {
               {loading ? (
                 <span className="flex items-center gap-2">
                   <span className="h-4 w-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                  {isLogin ? 'Signing in...' : 'Creating account...'}
+                  Signing in...
                 </span>
               ) : (
                 <span className="flex items-center gap-2">
-                  {isLogin ? (
-                    <>
-                      <LogIn className="w-4 h-4" />
-                      Sign In
-                    </>
-                  ) : (
-                    <>
-                      <UserPlus className="w-4 h-4" />
-                      Sign Up
-                    </>
-                  )}
+                  <LogIn className="w-4 h-4" />
+                  Sign In
                 </span>
               )}
             </Button>
           </form>
 
-          {/* Toggle */}
+          {/* Toggle to Register */}
           <div className="text-center">
-            <button
-              type="button"
-              onClick={() => setIsLogin(!isLogin)}
+            <Link
+              to="/register"
               className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-              disabled={loading}
             >
-              {isLogin ? (
-                <>
-                  Don't have an account?{' '}
-                  <span className="text-primary font-medium">Sign up</span>
-                </>
-              ) : (
-                <>
-                  Already have an account?{' '}
-                  <span className="text-primary font-medium">Sign in</span>
-                </>
-              )}
-            </button>
+              Don't have an account?{' '}
+              <span className="text-primary font-medium">Sign up</span>
+            </Link>
           </div>
         </div>
 
@@ -193,4 +147,4 @@ const Auth: React.FC = () => {
   );
 };
 
-export default Auth;
+export default Login;

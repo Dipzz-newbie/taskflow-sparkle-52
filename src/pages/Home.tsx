@@ -9,9 +9,9 @@ const Home: React.FC = () => {
   const { tasks, setTasks, user } = useApp();
 
   useEffect(() => {
-    // Redirect to auth if not logged in
+    // Redirect to login if not logged in
     if (!user) {
-      window.location.hash = '/auth';
+      window.location.hash = '/login';
     }
   }, [user]);
 
