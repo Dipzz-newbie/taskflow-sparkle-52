@@ -63,7 +63,7 @@ const Login: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-background flex items-center justify-center px-4 py-8">
-      <div className="w-full max-w-md">
+      <div className="w-full max-w-md animate-slide-in-left">
         {/* Card Container */}
         <div className="bg-card rounded-2xl shadow-lg border border-border p-8 space-y-6">
           {/* Header */}
