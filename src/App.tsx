@@ -14,22 +14,24 @@ import Register from "./pages/Register";
 const queryClient = new QueryClient();
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <AppProvider>
-        <Toaster />
-        <Sonner />
-        <Router>
-          <Route path="/" component={Home} />
-          <Route path="/stats" component={Stats} />
-          <Route path="/settings" component={Settings} />
-          <Route path="/login" component={Login} />
-          <Route path="/register" component={Register} />
-        </Router>
-        <Navigation />
-      </AppProvider>
-    </TooltipProvider>
-  </QueryClientProvider>
+  <>
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <AppProvider>
+          <Toaster />
+          <Sonner />
+          <Router>
+            <Route path="/" component={Home} />
+            <Route path="/stats" component={Stats} />
+            <Route path="/settings" component={Settings} />
+            <Route path="/login" component={Login} />
+            <Route path="/register" component={Register} />
+          </Router>
+          <Navigation />
+        </AppProvider>
+      </TooltipProvider>
+    </QueryClientProvider>
+  </>
 );
 
 export default App;
