@@ -17,6 +17,15 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
 
+  const [profilePicture, setProfilePicture] = useState<string>(() => {
+    const saved = localStorage.getItem("profilePicture");
+    return saved || "";
+  });
+  const [displayName, setDisplayName] = useState<string>(() => {
+    const saved = localStorage.getItem("displayName");
+    return saved || "";
+  });
+
   // Authentication effect
   useEffect(() => {
     // Set up auth state listener
@@ -50,6 +59,16 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       document.documentElement.classList.remove("dark");
     }
   }, [darkMode]);
+
+  // Save profile picture to localStorage
+  useEffect(() => {
+    localStorage.setItem("profilePicture", profilePicture);
+  }, [profilePicture]);
+
+  // Save display name to localStorage
+  useEffect(() => {
+    localStorage.setItem("displayName", displayName);
+  }, [displayName]);
 
   const theme: ThemeColors = {
     bg: "hsl(var(--background))",
