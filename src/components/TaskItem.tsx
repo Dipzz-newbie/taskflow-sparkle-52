@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Check, Trash2 } from "lucide-react";
 import { Task } from "@/types";
 import { cn } from "@/lib/utils";
@@ -7,9 +7,32 @@ interface TaskItemProps {
   task: Task;
   onToggle: (id: string) => void;
   onDelete: (id: string) => void;
+  onEdit: (id: string, newText: string) => void;
 }
+const TaskItem: React.FC<TaskItemProps> = ({ task, onToggle, onDelete, onEdit }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editText, setEditText] = useState(task.text);
 
-const TaskItem: React.FC<TaskItemProps> = ({ task, onToggle, onDelete }) => {
+  const handleSave = () => {
+    if (editText.trim() && editText !== task.text) {
+      onEdit(task.id, editText.trim());
+    }
+    setIsEditing(false);
+  };
+
+  const handleCancel = () => {
+    setEditText(task.text);
+    setIsEditing(false);
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSave();
+    } else if (e.key === 'Escape') {
+      handleCancel();
+    }
+  };
+  
   return (
     <li
       className={cn(
@@ -32,9 +55,13 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onToggle, onDelete }) => {
               ? "bg-primary border-primary scale-110"
               : "border-muted-foreground hover:border-primary hover:scale-110"
           )}
-          aria-label={task.completed ? "Mark as incomplete" : "Mark as complete"}
+          aria-label={
+            task.completed ? "Mark as incomplete" : "Mark as complete"
+          }
         >
-          {task.completed && <Check size={16} className="text-primary-foreground" />}
+          {task.completed && (
+            <Check size={16} className="text-primary-foreground" />
+          )}
         </button>
 
         <span
