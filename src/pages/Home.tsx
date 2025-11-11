@@ -4,6 +4,8 @@ import TaskInput from "@/components/TaskInput";
 import TaskItem from "@/components/TaskItem";
 import { Task } from "@/types";
 import { CheckCircle2 } from "lucide-react";
+import { text } from "stream/consumers";
+import { toast } from "sonner";
 
 const Home: React.FC = () => {
   const { tasks, setTasks, user } = useApp();
@@ -11,7 +13,7 @@ const Home: React.FC = () => {
   useEffect(() => {
     // Redirect to login if not logged in
     if (!user) {
-      window.location.hash = '/login';
+      window.location.hash = "/login";
     }
   }, [user]);
 
@@ -23,18 +25,23 @@ const Home: React.FC = () => {
       createdAt: Date.now(),
     };
     setTasks([...tasks, newTask]);
+    toast.success("Task Added Successfully!")
   };
 
   const toggleComplete = (id: string) => {
     setTasks(
-      tasks.map((t) =>
-        t.id === id ? { ...t, completed: !t.completed } : t
-      )
+      tasks.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t))
     );
   };
 
   const deleteTask = (id: string) => {
-    setTasks(tasks.filter((t) => t.id !== id));
+    setTasks(tasks.filter((t) => t.id !== id)); 
+    toast.success("Task Deleted!");
+  };
+
+  const editTask = (id: string, newText: string) => {
+    setTasks(tasks.map((t) => (t.id == id ? { ...t, text: newText } : t)));
+    toast.success("Task Updated!")
   };
 
   const completedCount = tasks.filter((t) => t.completed).length;
@@ -46,7 +53,10 @@ const Home: React.FC = () => {
         {/* Header */}
         <header className="text-center mb-8 sm:mb-12">
           <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 bg-primary rounded-2xl mb-4 shadow-lg">
-            <CheckCircle2 size={32} className="text-primary-foreground sm:w-10 sm:h-10" />
+            <CheckCircle2
+              size={32}
+              className="text-primary-foreground sm:w-10 sm:h-10"
+            />
           </div>
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-2">
             Task Manager
@@ -74,7 +84,9 @@ const Home: React.FC = () => {
                   <div
                     className="h-full bg-primary transition-all duration-500 ease-out"
                     style={{
-                      width: `${totalCount > 0 ? (completedCount / totalCount) * 100 : 0}%`,
+                      width: `${
+                        totalCount > 0 ? (completedCount / totalCount) * 100 : 0
+                      }%`,
                     }}
                   />
                 </div>
