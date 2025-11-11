@@ -25,7 +25,7 @@ const Home: React.FC = () => {
       createdAt: Date.now(),
     };
     setTasks([...tasks, newTask]);
-    toast.success("Task Added Successfully!")
+    toast.success("Task Added Successfully!");
   };
 
   const toggleComplete = (id: string) => {
@@ -35,13 +35,13 @@ const Home: React.FC = () => {
   };
 
   const deleteTask = (id: string) => {
-    setTasks(tasks.filter((t) => t.id !== id)); 
+    setTasks(tasks.filter((t) => t.id !== id));
     toast.success("Task Deleted!");
   };
 
   const editTask = (id: string, newText: string) => {
     setTasks(tasks.map((t) => (t.id == id ? { ...t, text: newText } : t)));
-    toast.success("Task Updated!")
+    toast.success("Task Updated!");
   };
 
   const completedCount = tasks.filter((t) => t.completed).length;
@@ -113,6 +113,7 @@ const Home: React.FC = () => {
                     task={task}
                     onToggle={toggleComplete}
                     onDelete={deleteTask}
+                    onEdit={editTask}
                   />
                 ))}
               </ul>
@@ -122,7 +123,7 @@ const Home: React.FC = () => {
 
         {/* Footer */}
         <footer className="text-center mt-8 text-xs sm:text-sm text-muted-foreground">
-          <p>Click on tasks to mark them as complete</p>
+          <p>Click on tasks to mark as complete • Hover to edit or delete</p>
         </footer>
       </div>
     </div>
