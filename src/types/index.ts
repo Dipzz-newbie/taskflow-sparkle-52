@@ -25,4 +25,8 @@ export interface AppContextType {
   user: any;
   session: any;
   signOut: () => Promise<void>;
+  profilePicture: string;
+  setProfilePicture: React.Dispatch<React.SetStateAction<string>>;
+  displayName: string;
+  setDisplayName: React.Dispatch<React.SetStateAction<string>>;
 }

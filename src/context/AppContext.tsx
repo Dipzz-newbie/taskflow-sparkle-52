@@ -1,11 +1,19 @@
-import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from "react";
 import { AppContextType, Task, ThemeColors } from "@/types";
 import { supabase } from "@/integrations/supabase/client";
 import { User, Session } from "@supabase/supabase-js";
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
-export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const AppProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
   const [tasks, setTasks] = useState<Task[]>(() => {
     const saved = localStorage.getItem("tasks");
     return saved ? JSON.parse(saved) : [];
@@ -16,7 +24,6 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   });
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
-
   const [profilePicture, setProfilePicture] = useState<string>(() => {
     const saved = localStorage.getItem("profilePicture");
     return saved || "";
@@ -29,12 +36,12 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   // Authentication effect
   useEffect(() => {
     // Set up auth state listener
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-      }
-    );
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+    });
 
     // Check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -82,11 +89,31 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
   const signOut = async () => {
     await supabase.auth.signOut();
-    window.location.hash = '/login';
+    // Clear profile data on sign out
+    setProfilePicture("");
+    setDisplayName("");
+    localStorage.removeItem("profilePicture");
+    localStorage.removeItem("displayName");
+    window.location.hash = "/login";
   };
 
   return (
-    <AppContext.Provider value={{ tasks, setTasks, darkMode, setDarkMode, theme, user, session, signOut }}>
+    <AppContext.Provider
+      value={{
+        tasks,
+        setTasks,
+        darkMode,
+        setDarkMode,
+        theme,
+        user,
+        session,
+        signOut,
+        profilePicture,
+        setProfilePicture,
+        displayName,
+        setDisplayName,
+      }}
+    >
       {children}
     </AppContext.Provider>
   );
