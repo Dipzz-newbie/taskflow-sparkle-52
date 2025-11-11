@@ -6,9 +6,13 @@ import {
   Sun,
   Trash2,
   LogOut,
+  Camera,
+  User,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 const Settings: React.FC = () => {
   const {
@@ -82,8 +86,8 @@ const Settings: React.FC = () => {
   };
 
   const getInitials = (email: string) => {
-    return email.substring(0,2).toUpperCase();
-  }
+    return email.substring(0, 2).toUpperCase();
+  };
 
   return (
     <div className="min-h-screen bg-background py-8 px-4 sm:py-12 sm:px-6 lg:px-8 pb-24">
@@ -106,6 +110,98 @@ const Settings: React.FC = () => {
 
         {/* Settings Card */}
         <div className="bg-card rounded-2xl shadow-xl border border-border p-6 sm:p-8 space-y-6">
+          {/* Profile Section */}
+          <div className="p-6 bg-gradient-to-br from-primary/5 to-accent/5 rounded-xl border border-border">
+            <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
+              <User size={20} />
+              Profile Information
+            </h3>
+
+            <div className="flex flex-col sm:flex-row items-center gap-6">
+              {/* Profile Picture */}
+              <div className="relative group">
+                <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-primary shadow-lg">
+                  {profilePicture ? (
+                    <img
+                      src={profilePicture}
+                      alt="Profile"
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-primary flex items-center justify-center text-2xl font-bold text-primary-foreground">
+                      {user?.email ? getInitials(user.email) : "U"}
+                    </div>
+                  )}
+                </div>
+
+                {/* Upload Button Overlay */}
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  className="absolute inset-0 bg-black/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                >
+                  <Camera size={24} className="text-white" />
+                </button>
+
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="hidden"
+                />
+              </div>
+
+              {/* Profile Info */}
+              <div className="flex-1 w-full space-y-4">
+                <div>
+                  <Label
+                    htmlFor="displayName"
+                    className="text-sm font-medium mb-2 block"
+                  >
+                    Display Name
+                  </Label>
+                  <div className="flex gap-2">
+                    <Input
+                      id="displayName"
+                      value={tempDisplayName}
+                      onChange={(e) => setTempDisplayName(e.target.value)}
+                      placeholder="Enter your name"
+                      className="flex-1"
+                    />
+                    <Button
+                      onClick={handlerSaveDisplayName}
+                      size="sm"
+                      disabled={
+                        !tempDisplayName.trim() ||
+                        tempDisplayName === displayName
+                      }
+                    >
+                      Save
+                    </Button>
+                  </div>
+                </div>
+
+                <div>
+                  <p className="text-sm text-muted-foreground mb-1">Email</p>
+                  <p className="text-sm font-medium text-foreground">
+                    {user?.email}
+                  </p>
+                </div>
+
+                {profilePicture && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleRemoveProfilePicture}
+                    className="w-full sm:w-auto"
+                  >
+                    Remove Picture
+                  </Button>
+                )}
+              </div>
+            </div>
+          </div>
+
           {/* Theme Toggle */}
           <div className="flex items-center justify-between p-4 bg-task-bg rounded-lg border border-task-border">
             <div className="flex items-center gap-3">
@@ -154,26 +250,17 @@ const Settings: React.FC = () => {
             </Button>
           </div>
 
-          {/* Account Section */}
-          <div className="mt-6 p-4 bg-task-bg rounded-lg border border-task-border">
-            <h3 className="font-semibold text-foreground mb-3">Account</h3>
-            <div className="space-y-4">
-              <div>
-                <p className="text-sm text-muted-foreground">Signed in as</p>
-                <p className="text-sm font-medium text-foreground">
-                  {user?.email}
-                </p>
-              </div>
-              <Button
-                variant="destructive"
-                size="sm"
-                onClick={signOut}
-                className="w-full"
-              >
-                <LogOut size={16} className="mr-2" />
-                Sign Out
-              </Button>
-            </div>
+          {/* Sign Out */}
+          <div className="mt-6 p-4 bg-destructive/10 rounded-lg border border-destructive/20">
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={signOut}
+              className="w-full"
+            >
+              <LogOut size={16} className="mr-2" />
+              Sign Out
+            </Button>
           </div>
 
           {/* App Info */}
