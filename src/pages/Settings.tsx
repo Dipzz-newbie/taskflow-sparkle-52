@@ -1,25 +1,89 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useApp } from "@/context/AppContext";
-import { Settings as SettingsIcon, Moon, Sun, Trash2, LogOut } from "lucide-react";
+import {
+  Settings as SettingsIcon,
+  Moon,
+  Sun,
+  Trash2,
+  LogOut,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
 const Settings: React.FC = () => {
-  const { darkMode, setDarkMode, setTasks, user, signOut } = useApp();
+  const {
+    darkMode,
+    setDarkMode,
+    setTasks,
+    user,
+    signOut,
+    profilePicture,
+    setProfilePicture,
+    displayName,
+    setDisplayName,
+  } = useApp();
+
+  const [tempDisplayName, setTempDisplayName] = useState(displayName);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     // Redirect to login if not logged in
     if (!user) {
-      window.location.hash = '/login';
+      window.location.hash = "/login";
     }
   }, [user]);
 
   const handleClearAll = () => {
-    if (window.confirm("Are you sure you want to delete all tasks? This action cannot be undone.")) {
+    if (
+      window.confirm(
+        "Are you sure you want to delete all tasks? This action cannot be undone."
+      )
+    ) {
       setTasks([]);
       toast.success("All tasks have been cleared");
     }
   };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+
+    if (file) {
+      // Check file size (max 5MB)
+
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error("Image size should be less than 5MB");
+        return;
+      }
+
+      if (!file.type.startsWith("image/")) {
+        toast.error("Please upload an image file");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        setProfilePicture(reader.result as string);
+        toast.success("Profile picture updated!");
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemoveProfilePicture = () => {
+    setProfilePicture("");
+    toast.success("Profile picture removed");
+  };
+
+  const handlerSaveDisplayName = () => {
+    if (tempDisplayName.trim()) {
+      setDisplayName(tempDisplayName.trim());
+      toast.success("Display name updated!");
+    }
+  };
+
+  const getInitials = (email: string) => {
+    return email.substring(0,2).toUpperCase();
+  }
 
   return (
     <div className="min-h-screen bg-background py-8 px-4 sm:py-12 sm:px-6 lg:px-8 pb-24">
@@ -27,7 +91,10 @@ const Settings: React.FC = () => {
         {/* Header */}
         <header className="text-center mb-8 sm:mb-12">
           <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 bg-primary rounded-2xl mb-4 shadow-lg">
-            <SettingsIcon size={32} className="text-primary-foreground sm:w-10 sm:h-10" />
+            <SettingsIcon
+              size={32}
+              className="text-primary-foreground sm:w-10 sm:h-10"
+            />
           </div>
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-2">
             Settings
@@ -42,7 +109,11 @@ const Settings: React.FC = () => {
           {/* Theme Toggle */}
           <div className="flex items-center justify-between p-4 bg-task-bg rounded-lg border border-task-border">
             <div className="flex items-center gap-3">
-              {darkMode ? <Moon size={24} className="text-primary" /> : <Sun size={24} className="text-primary" />}
+              {darkMode ? (
+                <Moon size={24} className="text-primary" />
+              ) : (
+                <Sun size={24} className="text-primary" />
+              )}
               <div>
                 <h3 className="font-semibold text-foreground">Dark Mode</h3>
                 <p className="text-sm text-muted-foreground">
@@ -65,7 +136,9 @@ const Settings: React.FC = () => {
             <div className="flex items-center gap-3">
               <Trash2 size={24} className="text-destructive" />
               <div>
-                <h3 className="font-semibold text-foreground">Clear All Tasks</h3>
+                <h3 className="font-semibold text-foreground">
+                  Clear All Tasks
+                </h3>
                 <p className="text-sm text-muted-foreground">
                   Delete all tasks permanently
                 </p>
@@ -87,7 +160,9 @@ const Settings: React.FC = () => {
             <div className="space-y-4">
               <div>
                 <p className="text-sm text-muted-foreground">Signed in as</p>
-                <p className="text-sm font-medium text-foreground">{user?.email}</p>
+                <p className="text-sm font-medium text-foreground">
+                  {user?.email}
+                </p>
               </div>
               <Button
                 variant="destructive"
