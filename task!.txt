@@ -1,1 +1,2 @@
 1. buat edit di setting untuk ganti nama, password, dan avatar user
+2. buat agar user pas mau bikin akun bisa isi nama di register
