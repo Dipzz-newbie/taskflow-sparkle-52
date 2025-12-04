@@ -8,6 +8,7 @@ import { UserPlus } from 'lucide-react';
 import { Link } from '@/components/Link';
 
 const Register: React.FC = () => {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -26,7 +27,7 @@ const Register: React.FC = () => {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!email || !password || !confirmPassword) {
+    if (!name || !email || !password || !confirmPassword) {
       toast({
         title: "Error",
         description: "Please fill in all fields",
@@ -61,6 +62,9 @@ const Register: React.FC = () => {
         password,
         options: {
           emailRedirectTo: `${window.location.origin}/`,
+          data: {
+            full_name: name,
+          },
         },
       });
 
@@ -107,6 +111,20 @@ const Register: React.FC = () => {
 
           {/* Form */}
           <form onSubmit={handleRegister} className="space-y-5 pt-2">
+            <div className="space-y-2">
+              <Label htmlFor="name" className="text-sm font-medium">Full Name</Label>
+              <Input
+                id="name"
+                type="text"
+                placeholder="John Doe"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                disabled={loading}
+                required
+                className="h-12 rounded-xl border-border/50 focus:border-accent transition-all"
+              />
+            </div>
+
             <div className="space-y-2">
               <Label htmlFor="email" className="text-sm font-medium">Email</Label>
               <Input
