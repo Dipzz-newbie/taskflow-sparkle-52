@@ -97,7 +97,7 @@ const Stats: React.FC = () => {
                     <Circle size={20} className="text-muted-foreground flex-shrink-0" />
                   )}
                   <span className={`text-sm ${task.completed ? "line-through text-muted-foreground" : "text-foreground"}`}>
-                    {task.text}
+                    {task.title}
                   </span>
                 </div>
               ))}

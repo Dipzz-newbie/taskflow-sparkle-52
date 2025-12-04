@@ -1,9 +1,10 @@
 export interface Task {
   id: string;
-  text: string;
+  title: string;
+  desc?: string;
   completed: boolean;
   createdAt: number;
-  category?: string;
+  updatedAt: number;
 }
 
 export interface ThemeColors {
