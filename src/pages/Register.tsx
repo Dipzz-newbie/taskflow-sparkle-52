@@ -11,7 +11,6 @@ const Register: React.FC = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
@@ -27,19 +26,10 @@ const Register: React.FC = () => {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!name || !email || !password || !confirmPassword) {
+    if (!name || !email || !password) {
       toast({
         title: "Error",
         description: "Please fill in all fields",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      toast({
-        title: "Error",
-        description: "Passwords do not match",
         variant: "destructive",
       });
       return;
@@ -154,19 +144,6 @@ const Register: React.FC = () => {
               <p className="text-xs text-muted-foreground">At least 6 characters</p>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="confirmPassword" className="text-sm font-medium">Confirm Password</Label>
-              <Input
-                id="confirmPassword"
-                type="password"
-                placeholder="Confirm your password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                disabled={loading}
-                required
-                className="h-12 rounded-xl border-border/50 focus:border-accent transition-all"
-              />
-            </div>
 
             <Button
               type="submit"
