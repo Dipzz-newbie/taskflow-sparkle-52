@@ -1,9 +1,9 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { useApp } from "@/context/AppContext";
 import TaskInput from "@/components/TaskInput";
 import TaskItem from "@/components/TaskItem";
 import { Task } from "@/types";
-import { CheckCircle2, Search, ArrowUpDown, CalendarIcon, X } from "lucide-react";
+import { CheckCircle2, Search, ArrowUpDown, CalendarIcon, X, Clock } from "lucide-react";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -32,12 +32,42 @@ const Home: React.FC = () => {
   const [sortOption, setSortOption] = useState<SortOption>("createdAt-desc");
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [selectedTime, setSelectedTime] = useState<string>("");
+  const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
     if (!user) {
       window.location.hash = "/login";
     }
   }, [user]);
+
+  // Real-time clock update
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  // Format time in WIB (UTC+7)
+  const formatWIBTime = useCallback((date: Date) => {
+    const wibOffset = 7 * 60; // WIB is UTC+7 in minutes
+    const utc = date.getTime() + date.getTimezoneOffset() * 60000;
+    const wibDate = new Date(utc + wibOffset * 60000);
+    return wibDate.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
+  }, []);
+
+  // Format date in English
+  const formatFullDate = useCallback((date: Date) => {
+    const wibOffset = 7 * 60;
+    const utc = date.getTime() + date.getTimezoneOffset() * 60000;
+    const wibDate = new Date(utc + wibOffset * 60000);
+    return wibDate.toLocaleDateString("en-US", {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
+  }, []);
 
   const addTask = (title: string, desc?: string) => {
     const now = Date.now();
@@ -143,6 +173,22 @@ const Home: React.FC = () => {
   return (
     <div className="min-h-screen bg-background py-8 px-4 sm:py-12 sm:px-6 lg:px-8 pb-24">
       <div className="max-w-2xl mx-auto">
+        {/* Greeting Section */}
+        <div className="mb-6 sm:mb-8">
+          <p className="text-base sm:text-lg text-foreground mb-2">
+            Hi there! Do you have anything scheduled to write today? 👋
+          </p>
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <Clock size={16} className="shrink-0" />
+              <span className="text-sm sm:text-base font-medium">{formatWIBTime(currentTime)} WIB</span>
+            </div>
+            <p className="text-xs sm:text-sm text-muted-foreground">
+              {formatFullDate(currentTime)}
+            </p>
+          </div>
+        </div>
+
         {/* Main Card */}
         <div className="bg-card rounded-2xl shadow-xl border border-border p-6 sm:p-8">
           {/* Input Section */}
