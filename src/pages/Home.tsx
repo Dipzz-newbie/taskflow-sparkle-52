@@ -174,8 +174,8 @@ const Home: React.FC = () => {
     <div className="min-h-screen bg-background py-8 px-4 sm:py-12 sm:px-6 lg:px-8 pb-24">
       <div className="max-w-2xl mx-auto">
         {/* Greeting Section */}
-        <div className="mb-6 sm:mb-8">
-          <p className="text-base sm:text-lg text-foreground mb-2">
+        <div className="mb-6 sm:mb-8 animate-greeting-in">
+          <p className="text-base sm:text-lg text-foreground mb-2 font-medium">
             Hi there! Do you have anything scheduled to write today? 👋
           </p>
           <div className="flex flex-col gap-1">
@@ -183,7 +183,7 @@ const Home: React.FC = () => {
               <Clock size={16} className="shrink-0" />
               <span className="text-sm sm:text-base font-medium">{formatWIBTime(currentTime)} WIB</span>
             </div>
-            <p className="text-xs sm:text-sm text-muted-foreground">
+            <p className="text-xs sm:text-sm text-muted-foreground font-light">
               {formatFullDate(currentTime)}
             </p>
           </div>

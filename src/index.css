@@ -87,6 +87,39 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-poppins;
+  }
+
+  h1, h2 {
+    @apply font-semibold;
+  }
+
+  h3, h4, h5, h6 {
+    @apply font-medium;
+  }
+
+  p, span, div {
+    @apply font-normal;
+  }
+
+  .caption, small, .text-xs {
+    @apply font-light;
+  }
+}
+
+@layer utilities {
+  .animate-greeting-in {
+    animation: greetingFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  @keyframes greetingFadeIn {
+    0% {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 }
