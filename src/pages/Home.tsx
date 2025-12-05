@@ -3,9 +3,16 @@ import { useApp } from "@/context/AppContext";
 import TaskInput from "@/components/TaskInput";
 import TaskItem from "@/components/TaskItem";
 import { Task } from "@/types";
-import { CheckCircle2, Search, ArrowUpDown } from "lucide-react";
+import { CheckCircle2, Search, ArrowUpDown, CalendarIcon, X } from "lucide-react";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import {
   Select,
   SelectContent,
@@ -13,6 +20,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { format } from "date-fns";
+import { id } from "date-fns/locale";
+import { cn } from "@/lib/utils";
 
 type SortOption = "createdAt-desc" | "createdAt-asc" | "updatedAt-desc" | "updatedAt-asc";
 
@@ -20,6 +30,8 @@ const Home: React.FC = () => {
   const { tasks, setTasks, user } = useApp();
   const [searchQuery, setSearchQuery] = useState("");
   const [sortOption, setSortOption] = useState<SortOption>("createdAt-desc");
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
+  const [selectedTime, setSelectedTime] = useState<string>("");
 
   useEffect(() => {
     if (!user) {
@@ -63,23 +75,55 @@ const Home: React.FC = () => {
     toast.success("Task Updated!");
   };
 
+  const clearDateFilter = () => {
+    setSelectedDate(undefined);
+    setSelectedTime("");
+  };
+
   const filteredAndSortedTasks = useMemo(() => {
     let result = [...tasks];
 
-    // Search filter
+    // Search filter by title
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
+      result = result.filter((task) => task.title.toLowerCase().includes(query));
+    }
+
+    // Date/time filter
+    if (selectedDate) {
       result = result.filter((task) => {
-        const titleMatch = task.title.toLowerCase().includes(query);
-        const createdAtMatch = new Date(task.createdAt)
-          .toLocaleString("id-ID")
-          .toLowerCase()
-          .includes(query);
-        const updatedAtMatch = new Date(task.updatedAt)
-          .toLocaleString("id-ID")
-          .toLowerCase()
-          .includes(query);
-        return titleMatch || createdAtMatch || updatedAtMatch;
+        const createdDate = new Date(task.createdAt);
+        const updatedDate = new Date(task.updatedAt);
+
+        // Check if date matches
+        const matchesCreatedDate =
+          createdDate.getFullYear() === selectedDate.getFullYear() &&
+          createdDate.getMonth() === selectedDate.getMonth() &&
+          createdDate.getDate() === selectedDate.getDate();
+
+        const matchesUpdatedDate =
+          updatedDate.getFullYear() === selectedDate.getFullYear() &&
+          updatedDate.getMonth() === selectedDate.getMonth() &&
+          updatedDate.getDate() === selectedDate.getDate();
+
+        // If time is also selected, filter by hour and minute
+        if (selectedTime) {
+          const [hours, minutes] = selectedTime.split(":").map(Number);
+          
+          const matchesCreatedTime =
+            matchesCreatedDate &&
+            createdDate.getHours() === hours &&
+            createdDate.getMinutes() === minutes;
+
+          const matchesUpdatedTime =
+            matchesUpdatedDate &&
+            updatedDate.getHours() === hours &&
+            updatedDate.getMinutes() === minutes;
+
+          return matchesCreatedTime || matchesUpdatedTime;
+        }
+
+        return matchesCreatedDate || matchesUpdatedDate;
       });
     }
 
@@ -91,7 +135,7 @@ const Home: React.FC = () => {
     });
 
     return result;
-  }, [tasks, searchQuery, sortOption]);
+  }, [tasks, searchQuery, sortOption, selectedDate, selectedTime]);
 
   const completedCount = tasks.filter((t) => t.completed).length;
   const totalCount = tasks.length;
@@ -123,28 +167,88 @@ const Home: React.FC = () => {
           </div>
 
           {/* Search and Filter */}
-          <div className="flex flex-col sm:flex-row gap-3 mb-6">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
-              <Input
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search by title, date..."
-                className="pl-10 h-11 rounded-xl"
-              />
+          <div className="flex flex-col gap-3 mb-6">
+            <div className="flex flex-col sm:flex-row gap-3">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
+                <Input
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search by title..."
+                  className="pl-10 h-11 rounded-xl"
+                />
+              </div>
+              <Select value={sortOption} onValueChange={(v) => setSortOption(v as SortOption)}>
+                <SelectTrigger className="w-full sm:w-[200px] h-11 rounded-xl">
+                  <ArrowUpDown size={16} className="mr-2" />
+                  <SelectValue placeholder="Sort by" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="createdAt-desc">Created (Newest)</SelectItem>
+                  <SelectItem value="createdAt-asc">Created (Oldest)</SelectItem>
+                  <SelectItem value="updatedAt-desc">Updated (Newest)</SelectItem>
+                  <SelectItem value="updatedAt-asc">Updated (Oldest)</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
-            <Select value={sortOption} onValueChange={(v) => setSortOption(v as SortOption)}>
-              <SelectTrigger className="w-full sm:w-[200px] h-11 rounded-xl">
-                <ArrowUpDown size={16} className="mr-2" />
-                <SelectValue placeholder="Sort by" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="createdAt-desc">Created (Newest)</SelectItem>
-                <SelectItem value="createdAt-asc">Created (Oldest)</SelectItem>
-                <SelectItem value="updatedAt-desc">Updated (Newest)</SelectItem>
-                <SelectItem value="updatedAt-asc">Updated (Oldest)</SelectItem>
-              </SelectContent>
-            </Select>
+
+            {/* Date and Time Filter */}
+            <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className={cn(
+                      "w-full sm:w-[200px] h-11 rounded-xl justify-start text-left font-normal",
+                      !selectedDate && "text-muted-foreground"
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {selectedDate ? format(selectedDate, "dd MMM yyyy", { locale: id }) : "Pilih tanggal"}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={selectedDate}
+                    onSelect={setSelectedDate}
+                    initialFocus
+                    className={cn("p-3 pointer-events-auto")}
+                  />
+                </PopoverContent>
+              </Popover>
+
+              <Input
+                type="time"
+                value={selectedTime}
+                onChange={(e) => setSelectedTime(e.target.value)}
+                placeholder="Pilih waktu"
+                className="w-full sm:w-[140px] h-11 rounded-xl"
+                disabled={!selectedDate}
+              />
+
+              {selectedDate && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={clearDateFilter}
+                  className="h-11 w-11 rounded-xl shrink-0"
+                >
+                  <X size={18} />
+                </Button>
+              )}
+            </div>
+
+            {/* Active Date Filter Display */}
+            {selectedDate && (
+              <div className="flex items-center gap-2 text-sm text-muted-foreground bg-secondary/50 px-3 py-2 rounded-lg">
+                <CalendarIcon size={14} />
+                <span>
+                  Menampilkan todo pada: {format(selectedDate, "dd MMMM yyyy", { locale: id })}
+                  {selectedTime && ` pukul ${selectedTime}`}
+                </span>
+              </div>
+            )}
           </div>
 
           {/* Stats */}
