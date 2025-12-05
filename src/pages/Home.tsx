@@ -143,22 +143,6 @@ const Home: React.FC = () => {
   return (
     <div className="min-h-screen bg-background py-8 px-4 sm:py-12 sm:px-6 lg:px-8 pb-24">
       <div className="max-w-2xl mx-auto">
-        {/* Header */}
-        <header className="text-center mb-8 sm:mb-12">
-          <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 bg-primary rounded-2xl mb-4 shadow-lg">
-            <CheckCircle2
-              size={32}
-              className="text-primary-foreground sm:w-10 sm:h-10"
-            />
-          </div>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-2">
-            Task Manager
-          </h1>
-          <p className="text-sm sm:text-base text-muted-foreground">
-            Stay organized and productive
-          </p>
-        </header>
-
         {/* Main Card */}
         <div className="bg-card rounded-2xl shadow-xl border border-border p-6 sm:p-8">
           {/* Input Section */}
