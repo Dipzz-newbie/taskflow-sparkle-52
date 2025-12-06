@@ -10,6 +10,9 @@ import Stats from "./pages/Stats";
 import Settings from "./pages/Settings";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import TaskNew from "./pages/TaskNew";
+import TaskDetail from "./pages/TaskDetail";
+import TaskEdit from "./pages/TaskEdit";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +29,9 @@ const App = () => (
             <Route path="/settings" component={Settings} />
             <Route path="/login" component={Login} />
             <Route path="/register" component={Register} />
+            <Route path="/tasks/new" component={TaskNew} />
+            <Route path="/tasks/:id" component={TaskDetail} />
+            <Route path="/tasks/:id/edit" component={TaskEdit} />
           </Router>
           <Navigation />
         </AppProvider>

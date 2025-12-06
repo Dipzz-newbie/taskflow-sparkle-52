@@ -1,10 +1,8 @@
 import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { useApp } from "@/context/AppContext";
-import TaskInput from "@/components/TaskInput";
-import TaskItem from "@/components/TaskItem";
-import { Task } from "@/types";
+import TaskCard from "@/components/TaskCard";
+import FloatingActionButton from "@/components/FloatingActionButton";
 import { CheckCircle2, Search, ArrowUpDown, CalendarIcon, X, Clock } from "lucide-react";
-import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -69,40 +67,12 @@ const Home: React.FC = () => {
     });
   }, []);
 
-  const addTask = (title: string, desc?: string) => {
-    const now = Date.now();
-    const newTask: Task = {
-      id: crypto.randomUUID(),
-      title,
-      desc,
-      completed: false,
-      createdAt: now,
-      updatedAt: now,
-    };
-    setTasks([...tasks, newTask]);
-    toast.success("Task Added Successfully!");
-  };
-
   const toggleComplete = (id: string) => {
     setTasks(
       tasks.map((t) =>
         t.id === id ? { ...t, completed: !t.completed, updatedAt: Date.now() } : t
       )
     );
-  };
-
-  const deleteTask = (id: string) => {
-    setTasks(tasks.filter((t) => t.id !== id));
-    toast.success("Task Deleted!");
-  };
-
-  const editTask = (id: string, title: string, desc?: string) => {
-    setTasks(
-      tasks.map((t) =>
-        t.id === id ? { ...t, title, desc, updatedAt: Date.now() } : t
-      )
-    );
-    toast.success("Task Updated!");
   };
 
   const clearDateFilter = () => {
@@ -170,6 +140,10 @@ const Home: React.FC = () => {
   const completedCount = tasks.filter((t) => t.completed).length;
   const totalCount = tasks.length;
 
+  const handleCreateTask = () => {
+    window.location.hash = "/tasks/new";
+  };
+
   return (
     <div className="min-h-screen bg-background py-8 px-4 sm:py-12 sm:px-6 lg:px-8 pb-24">
       <div className="max-w-2xl mx-auto">
@@ -191,11 +165,6 @@ const Home: React.FC = () => {
 
         {/* Main Card */}
         <div className="bg-card rounded-2xl shadow-xl border border-border p-6 sm:p-8">
-          {/* Input Section */}
-          <div className="mb-6">
-            <TaskInput onAdd={addTask} />
-          </div>
-
           {/* Search and Filter */}
           <div className="flex flex-col gap-3 mb-6">
             <div className="flex flex-col sm:flex-row gap-3">
@@ -234,7 +203,7 @@ const Home: React.FC = () => {
                     )}
                   >
                     <CalendarIcon className="mr-2 h-4 w-4" />
-                    {selectedDate ? format(selectedDate, "dd MMM yyyy", { locale: id }) : "Pilih tanggal"}
+                    {selectedDate ? format(selectedDate, "dd MMM yyyy", { locale: id }) : "Select date"}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
@@ -252,7 +221,7 @@ const Home: React.FC = () => {
                 type="time"
                 value={selectedTime}
                 onChange={(e) => setSelectedTime(e.target.value)}
-                placeholder="Pilih waktu"
+                placeholder="Select time"
                 className="w-full sm:w-[140px] h-11 rounded-xl"
                 disabled={!selectedDate}
               />
@@ -274,8 +243,8 @@ const Home: React.FC = () => {
               <div className="flex items-center gap-2 text-sm text-muted-foreground bg-secondary/50 px-3 py-2 rounded-lg">
                 <CalendarIcon size={14} />
                 <span>
-                  Menampilkan todo pada: {format(selectedDate, "dd MMMM yyyy", { locale: id })}
-                  {selectedTime && ` pukul ${selectedTime}`}
+                  Showing tasks on: {format(selectedDate, "dd MMMM yyyy", { locale: id })}
+                  {selectedTime && ` at ${selectedTime}`}
                 </span>
               </div>
             )}
@@ -311,19 +280,17 @@ const Home: React.FC = () => {
                 </div>
                 <p className="text-muted-foreground text-sm sm:text-base">
                   {tasks.length === 0
-                    ? "No tasks yet. Create your first task above!"
+                    ? "No tasks yet. Tap the + button to create your first task!"
                     : "No tasks found matching your search."}
                 </p>
               </div>
             ) : (
               <ul className="space-y-3">
                 {filteredAndSortedTasks.map((task) => (
-                  <TaskItem
+                  <TaskCard
                     key={task.id}
                     task={task}
                     onToggle={toggleComplete}
-                    onDelete={deleteTask}
-                    onEdit={editTask}
                   />
                 ))}
               </ul>
@@ -333,9 +300,12 @@ const Home: React.FC = () => {
 
         {/* Footer */}
         <footer className="text-center mt-8 text-xs sm:text-sm text-muted-foreground">
-          <p>Click on tasks to mark as complete • Hover to edit or delete</p>
+          <p>Click on tasks to view details • Tap checkbox to complete</p>
         </footer>
       </div>
+
+      {/* Floating Action Button */}
+      <FloatingActionButton onClick={handleCreateTask} />
     </div>
   );
 };
