@@ -286,11 +286,12 @@ const Home: React.FC = () => {
               </div>
             ) : (
               <ul className="space-y-3">
-                {filteredAndSortedTasks.map((task) => (
+                {filteredAndSortedTasks.map((task, index) => (
                   <TaskCard
                     key={task.id}
                     task={task}
                     onToggle={toggleComplete}
+                    index={index}
                   />
                 ))}
               </ul>

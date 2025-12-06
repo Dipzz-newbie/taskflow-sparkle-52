@@ -122,4 +122,97 @@ All colors MUST be HSL.
       transform: translateY(0);
     }
   }
+
+  /* Page transition */
+  .page-enter {
+    animation: pageSlideIn 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  @keyframes pageSlideIn {
+    0% {
+      opacity: 0;
+      transform: translateX(30px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  /* Floating button animation */
+  .fab-enter {
+    animation: fabEnter 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+    animation-delay: 0.3s;
+    opacity: 0;
+  }
+
+  @keyframes fabEnter {
+    0% {
+      opacity: 0;
+      transform: translateY(20px) scale(0.8);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  /* Stagger animation for cards */
+  .stagger-item {
+    opacity: 0;
+    animation: staggerFadeIn 0.4s ease-out forwards;
+  }
+
+  @keyframes staggerFadeIn {
+    0% {
+      opacity: 0;
+      transform: translateY(15px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Card interactions */
+  .card-interactive {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .card-interactive:hover {
+    transform: translateY(-2px) scale(1.02);
+  }
+
+  .card-interactive:active {
+    transform: scale(0.97);
+  }
+
+  /* Input focus glow */
+  .input-glow:focus {
+    box-shadow: 0 0 0 3px hsl(var(--ring) / 0.2);
+    transition: box-shadow 0.2s ease;
+  }
+
+  /* Error shake animation */
+  .error-shake {
+    animation: errorShake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+  }
+
+  @keyframes errorShake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-3px); }
+    20%, 40%, 60%, 80% { transform: translateX(3px); }
+  }
+
+  /* Responsive: reduce animations on mobile */
+  @media (prefers-reduced-motion: reduce) {
+    .animate-greeting-in,
+    .page-enter,
+    .fab-enter,
+    .stagger-item,
+    .card-interactive {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
 }

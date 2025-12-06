@@ -62,7 +62,7 @@ const TaskDetail: React.FC = () => {
   if (!task) {
     return (
       <div className="min-h-screen bg-background py-8 px-4 sm:py-12 sm:px-6 lg:px-8 pb-24">
-        <div className="max-w-2xl mx-auto animate-greeting-in">
+        <div className="max-w-2xl mx-auto page-enter">
           <Button
             variant="ghost"
             onClick={() => (window.location.hash = "/")}
@@ -86,7 +86,7 @@ const TaskDetail: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-background py-8 px-4 sm:py-12 sm:px-6 lg:px-8 pb-24">
-      <div className="max-w-2xl mx-auto animate-greeting-in">
+      <div className="max-w-2xl mx-auto page-enter">
         <Button
           variant="ghost"
           onClick={() => (window.location.hash = "/")}
