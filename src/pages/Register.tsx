@@ -16,7 +16,6 @@ const Register: React.FC = () => {
   const { toast } = useToast();
 
   useEffect(() => {
-    // Check if user is already logged in
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
         window.location.hash = '/';
@@ -88,31 +87,31 @@ const Register: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-accent/5 to-background flex items-center justify-center px-4 py-8 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-background via-accent/5 to-background flex items-center justify-center px-4 py-6 relative overflow-hidden">
       {/* Decorative elements */}
-      <div className="absolute top-0 left-0 w-96 h-96 bg-accent/10 rounded-full blur-3xl -z-10" />
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-3xl -z-10" />
+      <div className="absolute top-0 left-0 w-64 h-64 sm:w-96 sm:h-96 bg-accent/10 rounded-full blur-3xl -z-10" />
+      <div className="absolute bottom-0 right-0 w-64 h-64 sm:w-96 sm:h-96 bg-primary/10 rounded-full blur-3xl -z-10" />
       
-      <div className="w-full max-w-md animate-slide-in-right">
+      <div className="w-full max-w-sm animate-slide-in-right">
         {/* Card Container */}
-        <div className="bg-card/80 backdrop-blur-sm rounded-3xl shadow-2xl border border-border/50 p-8 space-y-6 transition-all hover:shadow-accent/10 hover:shadow-3xl">
+        <div className="bg-card/80 backdrop-blur-sm rounded-2xl shadow-xl border border-border/50 p-5 sm:p-6 space-y-4 transition-all">
           {/* Header */}
-          <div className="text-center space-y-3">
-            <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-accent to-accent/70 mb-2 shadow-lg shadow-accent/30">
-              <UserPlus className="w-10 h-10 text-accent-foreground" />
+          <div className="text-center space-y-2">
+            <div className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-gradient-to-br from-accent to-accent/70 shadow-lg shadow-accent/20">
+              <UserPlus className="w-7 h-7 sm:w-8 sm:h-8 text-accent-foreground" />
             </div>
-            <h1 className="text-4xl font-bold text-foreground tracking-tight">
-              Join Us Today
+            <h1 className="text-2xl sm:text-3xl font-bold text-foreground">
+              Join Us
             </h1>
-            <p className="text-muted-foreground text-base">
-              Create your account to get started
+            <p className="text-muted-foreground text-sm">
+              Create your account
             </p>
           </div>
 
           {/* Form */}
-          <form onSubmit={handleRegister} className="space-y-5 pt-2">
-            <div className="space-y-2">
-              <Label htmlFor="name" className="text-sm font-medium">Full Name</Label>
+          <form onSubmit={handleRegister} className="space-y-3">
+            <div className="space-y-1.5">
+              <Label htmlFor="name" className="text-xs sm:text-sm font-medium">Full Name</Label>
               <Input
                 id="name"
                 type="text"
@@ -121,12 +120,12 @@ const Register: React.FC = () => {
                 onChange={(e) => setName(e.target.value)}
                 disabled={loading}
                 required
-                className="h-12 rounded-xl border-border/50 focus:border-accent transition-all"
+                className="h-10 sm:h-11 rounded-lg text-sm"
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="email" className="text-sm font-medium">Email</Label>
+            <div className="space-y-1.5">
+              <Label htmlFor="email" className="text-xs sm:text-sm font-medium">Email</Label>
               <Input
                 id="email"
                 type="email"
@@ -135,52 +134,51 @@ const Register: React.FC = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={loading}
                 required
-                className="h-12 rounded-xl border-border/50 focus:border-accent transition-all"
+                className="h-10 sm:h-11 rounded-lg text-sm"
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="password" className="text-sm font-medium">Password</Label>
+            <div className="space-y-1.5">
+              <Label htmlFor="password" className="text-xs sm:text-sm font-medium">Password</Label>
               <Input
                 id="password"
                 type="password"
-                placeholder="Create a strong password"
+                placeholder="Create password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 disabled={loading}
                 required
-                className="h-12 rounded-xl border-border/50 focus:border-accent transition-all"
+                className="h-10 sm:h-11 rounded-lg text-sm"
               />
-              <p className="text-xs text-muted-foreground">At least 6 characters</p>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="confirmPassword" className="text-sm font-medium">Confirm Password</Label>
+            <div className="space-y-1.5">
+              <Label htmlFor="confirmPassword" className="text-xs sm:text-sm font-medium">Confirm Password</Label>
               <Input
                 id="confirmPassword"
                 type="password"
-                placeholder="Confirm your password"
+                placeholder="Confirm password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 disabled={loading}
                 required
-                className="h-12 rounded-xl border-border/50 focus:border-accent transition-all"
+                className="h-10 sm:h-11 rounded-lg text-sm"
               />
             </div>
 
             <Button
               type="submit"
-              className="w-full h-12 rounded-xl text-base font-medium shadow-lg hover:shadow-xl transition-all hover:scale-[1.02]"
+              className="w-full h-10 sm:h-11 rounded-lg text-sm font-medium shadow-md hover:shadow-lg transition-all mt-2"
               disabled={loading}
             >
               {loading ? (
                 <span className="flex items-center gap-2">
-                  <span className="h-5 w-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                  <span className="h-4 w-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
                   Creating account...
                 </span>
               ) : (
                 <span className="flex items-center gap-2">
-                  <UserPlus className="w-5 h-5" />
+                  <UserPlus className="w-4 h-4" />
                   Create Account
                 </span>
               )}
@@ -188,12 +186,12 @@ const Register: React.FC = () => {
           </form>
 
           {/* Divider */}
-          <div className="relative py-2">
+          <div className="relative py-1">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-border/50"></div>
             </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-card px-2 text-muted-foreground">Already a member?</span>
+            <div className="relative flex justify-center text-xs">
+              <span className="bg-card px-2 text-muted-foreground">Already have an account?</span>
             </div>
           </div>
 
@@ -201,21 +199,13 @@ const Register: React.FC = () => {
           <div className="text-center">
             <Link
               to="/login"
-              className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors group"
+              className="inline-flex items-center gap-1 text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
-              Sign in to your account
-              <span className="text-primary font-semibold group-hover:translate-x-1 transition-transform">Sign in →</span>
+              Sign in instead
+              <span className="text-primary font-medium">→</span>
             </Link>
           </div>
         </div>
-
-        {/* Footer */}
-        <p className="text-center text-xs text-muted-foreground/60 mt-8">
-          By continuing, you agree to our{' '}
-          <span className="text-muted-foreground hover:text-foreground cursor-pointer transition-colors">Terms</span>
-          {' '}and{' '}
-          <span className="text-muted-foreground hover:text-foreground cursor-pointer transition-colors">Privacy Policy</span>
-        </p>
       </div>
     </div>
   );
