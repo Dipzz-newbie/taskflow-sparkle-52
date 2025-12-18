@@ -24,13 +24,12 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({ onClick }) 
         "fixed bottom-24 right-6 z-40",
         "w-14 h-14 rounded-full",
         "bg-primary text-primary-foreground",
-        "shadow-lg hover:shadow-xl",
+        "shadow-lg hover:shadow-xl hover:shadow-primary/20",
         "flex items-center justify-center",
-        "transition-all duration-200 ease-out",
-        "hover:scale-110",
-        "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2",
-        "fab-enter",
-        isPressed && "animate-bounce-in"
+        "transition-all duration-150 ease-out",
+        "hover:scale-105 active:scale-95",
+        "focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2",
+        "fab-enter hover-glow"
       )}
       aria-label="Create new task"
     >
@@ -38,8 +37,8 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({ onClick }) 
         size={24} 
         strokeWidth={2.5} 
         className={cn(
-          "transition-transform duration-200",
-          isPressed && "rotate-90"
+          "transition-transform duration-150 ease-out",
+          isPressed && "rotate-90 scale-90"
         )}
       />
     </button>

@@ -108,14 +108,15 @@ All colors MUST be HSL.
 }
 
 @layer utilities {
+  /* Greeting animation */
   .animate-greeting-in {
-    animation: greetingFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    animation: greetingFadeIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   }
 
   @keyframes greetingFadeIn {
     0% {
       opacity: 0;
-      transform: translateY(-20px);
+      transform: translateY(-10px);
     }
     100% {
       opacity: 1;
@@ -125,13 +126,13 @@ All colors MUST be HSL.
 
   /* Page transition */
   .page-enter {
-    animation: pageSlideIn 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    animation: pageSlideIn 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   }
 
   @keyframes pageSlideIn {
     0% {
       opacity: 0;
-      transform: translateX(30px);
+      transform: translateX(16px);
     }
     100% {
       opacity: 1;
@@ -141,15 +142,15 @@ All colors MUST be HSL.
 
   /* Floating button animation */
   .fab-enter {
-    animation: fabEnter 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
-    animation-delay: 0.3s;
+    animation: fabEnter 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    animation-delay: 0.2s;
     opacity: 0;
   }
 
   @keyframes fabEnter {
     0% {
       opacity: 0;
-      transform: translateY(20px) scale(0.8);
+      transform: translateY(16px) scale(0.8);
     }
     100% {
       opacity: 1;
@@ -160,13 +161,13 @@ All colors MUST be HSL.
   /* Stagger animation for cards */
   .stagger-item {
     opacity: 0;
-    animation: staggerFadeIn 0.4s ease-out forwards;
+    animation: staggerFadeIn 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   }
 
   @keyframes staggerFadeIn {
     0% {
       opacity: 0;
-      transform: translateY(15px);
+      transform: translateY(8px);
     }
     100% {
       opacity: 1;
@@ -174,43 +175,184 @@ All colors MUST be HSL.
     }
   }
 
-  /* Card interactions */
+  /* Card interactions - premium feel */
   .card-interactive {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: transform 0.15s cubic-bezier(0.22, 1, 0.36, 1), 
+                box-shadow 0.15s cubic-bezier(0.22, 1, 0.36, 1),
+                background-color 0.15s ease;
+    will-change: transform;
   }
 
   .card-interactive:hover {
-    transform: translateY(-2px) scale(1.02);
+    transform: translateY(-1px) scale(1.01);
+    box-shadow: 0 4px 12px hsl(var(--foreground) / 0.08);
   }
 
   .card-interactive:active {
-    transform: scale(0.97);
+    transform: scale(0.98);
+    transition-duration: 0.1s;
   }
 
-  /* Input focus glow */
+  /* Button press effect */
+  .btn-press {
+    transition: transform 0.1s cubic-bezier(0.22, 1, 0.36, 1), 
+                box-shadow 0.1s ease,
+                background-color 0.15s ease;
+  }
+
+  .btn-press:active {
+    transform: scale(0.96);
+  }
+
+  /* Input focus glow - subtle and elegant */
+  .input-glow {
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+
   .input-glow:focus {
-    box-shadow: 0 0 0 3px hsl(var(--ring) / 0.2);
-    transition: box-shadow 0.2s ease;
+    box-shadow: 0 0 0 3px hsl(var(--ring) / 0.15);
   }
 
   /* Error shake animation */
   .error-shake {
-    animation: errorShake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+    animation: errorShake 0.3s cubic-bezier(0.36, 0.07, 0.19, 0.97);
   }
 
   @keyframes errorShake {
     0%, 100% { transform: translateX(0); }
-    10%, 30%, 50%, 70%, 90% { transform: translateX(-3px); }
-    20%, 40%, 60%, 80% { transform: translateX(3px); }
+    25% { transform: translateX(-3px); }
+    75% { transform: translateX(3px); }
   }
 
-  /* Responsive: reduce animations on mobile */
+  /* Checkbox animation */
+  .checkbox-pop {
+    animation: checkboxPop 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  @keyframes checkboxPop {
+    0% { transform: scale(0); }
+    60% { transform: scale(1.15); }
+    100% { transform: scale(1); }
+  }
+
+  /* Progress bar smooth fill */
+  .progress-fill {
+    transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* Hover glow effect */
+  .hover-glow {
+    transition: box-shadow 0.2s ease;
+  }
+
+  .hover-glow:hover {
+    box-shadow: 0 0 16px hsl(var(--primary) / 0.2);
+  }
+
+  /* Smooth scroll behavior */
+  .smooth-scroll {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Loading skeleton pulse */
+  .skeleton-pulse {
+    animation: skeletonPulse 1.5s ease-in-out infinite;
+  }
+
+  @keyframes skeletonPulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 0.7; }
+  }
+
+  /* Toast slide animation */
+  .toast-slide-in {
+    animation: toastSlideIn 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  @keyframes toastSlideIn {
+    0% {
+      opacity: 0;
+      transform: translateY(-8px) scale(0.96);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  /* Dialog scale animation */
+  .dialog-scale {
+    animation: dialogScale 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  @keyframes dialogScale {
+    0% {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  /* Icon bounce on interaction */
+  .icon-bounce:active svg {
+    animation: iconBounce 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  @keyframes iconBounce {
+    0% { transform: scale(1); }
+    50% { transform: scale(0.85); }
+    100% { transform: scale(1); }
+  }
+
+  /* Ripple effect base */
+  .ripple {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ripple::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle, hsl(var(--foreground) / 0.1) 10%, transparent 10%);
+    transform: scale(10);
+    opacity: 0;
+    transition: transform 0.4s, opacity 0.3s;
+  }
+
+  .ripple:active::after {
+    transform: scale(0);
+    opacity: 1;
+    transition: 0s;
+  }
+
+  /* Responsive: optimize for mobile */
+  @media (max-width: 640px) {
+    .card-interactive:hover {
+      transform: none;
+      box-shadow: none;
+    }
+    
+    .card-interactive:active {
+      transform: scale(0.98);
+    }
+  }
+
+  /* Reduced motion preferences */
   @media (prefers-reduced-motion: reduce) {
     .animate-greeting-in,
     .page-enter,
     .fab-enter,
     .stagger-item,
-    .card-interactive {
+    .card-interactive,
+    .btn-press,
+    .checkbox-pop,
+    .toast-slide-in,
+    .dialog-scale {
       animation: none !important;
       transition: none !important;
     }

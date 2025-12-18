@@ -49,15 +49,16 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onToggle, index = 0 }) => {
           className={cn(
             "flex-shrink-0 w-6 h-6 rounded-full border-2 mt-0.5",
             "flex items-center justify-center",
-            "transition-all duration-200",
+            "transition-all duration-150 ease-out",
+            "active:scale-90",
             task.completed
-              ? "bg-primary border-primary scale-110"
-              : "border-muted-foreground hover:border-primary hover:scale-110"
+              ? "bg-primary border-primary"
+              : "border-muted-foreground hover:border-primary hover:scale-105"
           )}
           aria-label={task.completed ? "Mark as incomplete" : "Mark as complete"}
         >
           {task.completed && (
-            <Check size={16} className="text-primary-foreground animate-fade-in-scale" />
+            <Check size={16} className="text-primary-foreground checkbox-pop" />
           )}
         </button>
 
