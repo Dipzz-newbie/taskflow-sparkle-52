@@ -31,7 +31,7 @@ export const Navigation: React.FC = () => {
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-card border-t border-border py-3 px-4 z-50">
+    <nav className="fixed bottom-0 left-0 right-0 bg-card/95 backdrop-blur-sm border-t border-border py-3 px-4 z-50">
       <div className="flex items-center justify-between px-4">
         {/* Nav Items - Left */}
         <div className="flex gap-6 items-center">
@@ -42,11 +42,17 @@ export const Navigation: React.FC = () => {
               <Link
                 key={item.path}
                 to={item.path}
-                className={`flex flex-col items-center gap-1 no-underline transition-colors ${
-                  isActive ? "text-primary" : "text-muted-foreground"
+                className={`flex flex-col items-center gap-1 no-underline transition-all duration-150 ease-out active:scale-90 ${
+                  isActive 
+                    ? "text-primary" 
+                    : "text-muted-foreground hover:text-foreground"
                 }`}
               >
-                <Icon size={20} />
+                <div className={`p-1.5 rounded-lg transition-all duration-150 ${
+                  isActive ? "bg-primary/10" : "hover:bg-accent/50"
+                }`}>
+                  <Icon size={20} />
+                </div>
                 <span className="text-xs">{item.label}</span>
               </Link>
             );
@@ -55,7 +61,7 @@ export const Navigation: React.FC = () => {
 
         {/* Logo and Text - Right */}
         <div className="flex items-center gap-3">
-          <div className="flex items-center justify-center w-10 h-10 bg-primary rounded-xl shadow-md">
+          <div className="flex items-center justify-center w-10 h-10 bg-primary rounded-xl shadow-md hover-glow transition-all duration-200">
             <CheckCircle2 size={20} className="text-primary-foreground" />
           </div>
           <div className="hidden sm:block">

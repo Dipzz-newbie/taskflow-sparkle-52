@@ -237,7 +237,7 @@ const Home: React.FC = () => {
       </div>
 
       {/* Scrollable Content */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto smooth-scroll">
         <div className="max-w-2xl mx-auto px-3 py-4 sm:px-4 sm:py-6 pb-24">
           {/* Stats */}
           {totalCount > 0 && (
@@ -247,7 +247,7 @@ const Home: React.FC = () => {
               </span>
               <div className="h-1.5 w-20 sm:w-24 bg-secondary rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-primary transition-all duration-500 ease-out"
+                  className="h-full bg-primary progress-fill"
                   style={{
                     width: `${totalCount > 0 ? (completedCount / totalCount) * 100 : 0}%`,
                   }}
@@ -270,8 +270,8 @@ const Home: React.FC = () => {
           {/* Task List */}
           <div className="space-y-2 sm:space-y-3">
             {filteredAndSortedTasks.length === 0 ? (
-              <div className="text-center py-8 sm:py-12">
-                <div className="inline-flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 bg-secondary rounded-full mb-3">
+              <div className="text-center py-8 sm:py-12 animate-fade-in">
+                <div className="inline-flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 bg-secondary rounded-full mb-3 animate-float">
                   <CheckCircle2 size={24} className="text-muted-foreground sm:w-7 sm:h-7" />
                 </div>
                 <p className="text-muted-foreground text-xs sm:text-sm">
